@@ -19,6 +19,8 @@ b) [0.1 marks] Explain, in detail, what a System Call is, give at least three ex
 Additionally, explain how system Calls are related to Interrupts and explain how the Interrupt hardware 
 mechanism is used to implement System Calls. [Student 2] 
  
+
+
  
 c) [0.1 marks] In class, we showed a simple pseudocode of an output driver for a printer. This driver 
 included two generic statements:  
@@ -26,7 +28,20 @@ i. check if the printer is OK
 ii. print (LF, CR) 
 Discuss in detail all the steps that the printer must carry out for each of these two items (Student 1 should 
 submit answer ii., and Student 2 should submit answer i.). 
- 
+
+i. To check if the printer is OK, the CPU should:
+- Check if the printer is powered on and connected
+- Check if the printer is jammed
+- Check if the printer has paper
+- Check if the printer has ink
+
+ii. LF (Line Feed):
+- Spin a motor to move the print head down by one line OR
+    - Spin a motor to move the paper up by one line
+
+CR (Carriage Return):
+- Spin a motor to move the print head back to the left side of the page
+
 d) [0.4 marks] Explain briefly how the off-line operation works in batch OS. Discuss advantages and 
 disadvantages of this approach. 
  
@@ -49,6 +64,15 @@ beginning of the card. What should the Operating System do in that case?
 f) [0.2 marks] Write examples of four privileged instructions and explain what they do and why they are 
 privileged (each student should submit an answer for two instructions, separately, by the first 
 deadline). 
+- Switch to kernel mode
+
+- Interrupt management
+If you can change the interrupt management, you can force any interrupt to go through while in the kernel space, which gives the interrupt handler elevated privileges.
+
+- I/O control
+- Timer management
+
+
   
 g) [0.4 marks] A simple Batch OS includes the four components discussed in class: 
   

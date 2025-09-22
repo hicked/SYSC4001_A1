@@ -1,6 +1,10 @@
 Student 1: Antoine Hickey
 Stundet 2: Enzo Chen
 
+Below is an explanation of what this program does, as well as the answers to the questions from Part I.
+
+> Insert description here
+
 a) [0.1 mark] Explain, in detail, the complete Interrupt mechanism, starting from an external signal until 
 completion. Differentiate clearly what part of the process is carried out by hardware components, and what 
 is done by software. [Student 1] 

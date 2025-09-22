@@ -35,6 +35,7 @@ submit answer ii., and Student 2 should submit answer i.).
 
 i. To check if the printer is OK, the CPU should:
 - Check if the printer is powered on and connected
+- Check if busy (already printing something)
 - Check if the printer is jammed
 - Check if the printer has paper
 - Check if the printer has ink

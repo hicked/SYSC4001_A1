@@ -3,7 +3,7 @@ Stundet 2: Enzo Chen
 
 Below is an explanation of what this program does, as well as the answers to the questions from Part I.
 
-> Insert description here
+> Insert description here (to be done during part two)
 
 a) [0.1 mark] Explain, in detail, the complete Interrupt mechanism, starting from an external signal until 
 completion. Differentiate clearly what part of the process is carried out by hardware components, and what 
@@ -22,8 +22,26 @@ The hardware within the I/O device is used to modify the interupt register when 
 b) [0.1 marks] Explain, in detail, what a System Call is, give at least three examples of known system calls. 
 Additionally, explain how system Calls are related to Interrupts and explain how the Interrupt hardware 
 mechanism is used to implement System Calls. [Student 2] 
- 
 
+A sytstem call is a request sent by a user program to perform ask the OS to perform tasks which are normally reserved for the OS.
+There are six main categories of system calls:
+- Process control
+- File management
+- Device management
+- Information maintenance
+- Communications
+- Protection
+
+Three examples of system calls are:
+1. Reading from a file (File management)
+2. Get current time/date (Information maintenance)
+3. Allocate memory (Process control)
+
+System calls are related to interupts because they can create a software interrupt, known as a "trap" or "exception". 
+The system call provides an interrupt vector, which passes control to a system-call service routine.
+The system call also sets the CPU state to kernel mode, by setting the mode bit accordingly.
+The kernel identifies which system call was invoked, then executes it, and finally gives control back to the program.
+This process of using a software interrupt, providing an interrupt vector, changing the mode bit, and executing a service routine uses the same hardware as interrupts to execute a system call.
 
  
 c) [0.1 marks] In class, we showed a simple pseudocode of an output driver for a printer. This driver 

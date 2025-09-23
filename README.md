@@ -9,16 +9,17 @@ a) [0.1 mark] Explain, in detail, the complete Interrupt mechanism, starting fro
 completion. Differentiate clearly what part of the process is carried out by hardware components, and what 
 is done by software. [Student 1] 
 
-- Register within the I/O device that will hold whether or not the device is busy (this could be printing, reading, or doing some other task)
-- When it is ready to be sent to the CPU, this signal is then sent to the CPUs internal IR (Interrupt register)
-- This is a register that is checking at the end of each execute cycle, to see if there is any interrupt needed to be handled before continuing on to the next instruction.
+Below is a sequence of of hardware and software steps that are involved in the full interupt mechanism for I/O deviced servicing.
+- The interrupt is enabled by a set of sensor(s) and/or software within the I/O device (this could be for when it's finished printing, reading, or doing some other task depending on the I/O device).
+- This signal is then stored within the I/O devices internal IR (interrupt register).
+- It then travels through a physical connection (copper wire, cable, port, etc.)
+- To the IOP IR (Input/Output Processor Interrupt Register). This can be compared to a 1401 processor from the early staged of computers as it is a less powerful computer that is used as a middleman for communicating between I/O devices and the main CPU.
+- The interrupt signal is then sent through the internal Interrupt Databus, where it wakes up the CPU (if it was previously asleep), and stored the signal within the CPUs IR (Interrupt Register).
+- Because of the way the CPU's architecture is set up, this register (IR) is checked at the end of each fetch execute cycle. Therefore, after finishing it's execution, or waking up, it will recognize that an interrupt signal has been sent.
+- Then, the CPU will use the data that is within the IR to find which interrupt handler to use by looking through it's vector table, which then points to a set of drivers stored in the OS/Monitor. This will branch to that specific devices interrupt handler, before continuing with the instruction it was doing previously. 
 
--In reality it is a little more complicated than this, this is because firstly, the I/O device should see if there is already an interrupt queued. If this is the case, it must wait until it is able to send the signal? Also, sometimes it might wait until more than just the end of each cycle since this can give the interrupt handler (from within the vector table) permissions it is not supposed to have, including possibly modifying the kernel.
+-In reality it is a little more complicated than this: Firstly, software is used to determine if an interrupt has already occured, before sending one of it's own. If this is the case, it must wait until it is able to send the signal. Also, we will see that for later iterations, sometimes the CPU might wait until more than just the end of each cycle since this can give the interrupt handler (from within the vector table) permissions it is not supposed to have, including possibly modifying the kernel.
 
-- software is in charge of handling multiple interupts
-
-The hardware within the I/O device is used to modify the interupt register when it is busy/done
- 
 b) [0.1 marks] Explain, in detail, what a System Call is, give at least three examples of known system calls. 
 Additionally, explain how system Calls are related to Interrupts and explain how the Interrupt hardware 
 mechanism is used to implement System Calls. [Student 2] 

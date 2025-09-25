@@ -24,7 +24,7 @@ b) [0.1 marks] Explain, in detail, what a System Call is, give at least three ex
 Additionally, explain how system Calls are related to Interrupts and explain how the Interrupt hardware 
 mechanism is used to implement System Calls. [Student 2] 
 
-A sytstem call is a request sent by a user program to perform ask the OS to perform tasks which are normally reserved for the OS.
+A sytstem call is a request sent by a user program to ask the OS to perform tasks which are normally reserved for the OS.
 There are six main categories of system calls:
 - Process control
 - File management

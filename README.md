@@ -93,9 +93,23 @@ deadline).
 - Interrupt management
 If you can change the interrupt management, you can force any interrupt to go through while in the kernel space, which gives the interrupt handler elevated privileges.
 
-- I/O control
-- Timer management
+- I/O control instuctions
+I/O control instructions allow the CPU to interact directly with I/O devices,
+controlling them and exchanging data with them.
+All I/O control instructions are privileged because the operating system must
+verify that the instructions are valid. Defining the instructions as prvileged
+prevents the user from performing illegal I/O operations, and forces the user
+to execute system calls for the operating system to perform the I/O.
 
+- Timer management
+The timer is used to ensure a user program never takes control of the CPU and
+gets stuck in a failed system call or infinite loop, preventing the OS from
+regaining control. The timer management instructions are used to control the
+timer and make sure it interrupts user instructions after a count of clock
+cycles, to let the OS regain control of the CPU. Timer management instructions
+are privileged because giving the user direct control over the timer could cause
+a program to prevent the timer from interrupting it, preventing the OS from
+regaining control of the CPU through the timer.
 
   
 g) [0.4 marks] A simple Batch OS includes the four components discussed in class: 

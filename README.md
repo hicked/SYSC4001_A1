@@ -88,28 +88,19 @@ beginning of the card. What should the Operating System do in that case?
 f) [0.2 marks] Write examples of four privileged instructions and explain what they do and why they are 
 privileged (each student should submit an answer for two instructions, separately, by the first 
 deadline). 
+
 - Switch to kernel mode
+This priviledged instruction switches the processor from user mode to kernel mode, which allows them to modify the Operating System/Kernel/Monitor. This includes the job sequencer, drivers, JCL (Job Control Language), and Interupt Processing. This is privileged because unrestricted access would allow user programs to corrupt the OS, potentially bypassing security measures, and giving unrestricted access to all other user programs.
 
 - Interrupt management
-If you can change the interrupt management, you can force any interrupt to go through while in the kernel space, which gives the interrupt handler elevated privileges.
+The interrupt manager is used to manage when interrupts get called, as well as how they are handled depending on the device. Being able to modify the interrupt management system is priviledged because malicious user programs could disable critical interrupts (like timer interrupts). If you can modify the interrupt management system (by changing the vector table), you can also redirect interrupts to malicious handlers Interrupt Servicing Routine (ISRs).
 
 - I/O control instuctions
-I/O control instructions allow the CPU to interact directly with I/O devices,
-controlling them and exchanging data with them.
-All I/O control instructions are privileged because the operating system must
-verify that the instructions are valid. Defining the instructions as prvileged
-prevents the user from performing illegal I/O operations, and forces the user
-to execute system calls for the operating system to perform the I/O.
+I/O control instructions allow the CPU to interact directly with I/O devices, controlling them and exchanging data with them. All I/O control instructions are privileged because the operating system normally must verify that the instructions are valid. If this can be modified, then invalid commands can be sent to the I/O devices, having unwanted, or unpredictable results. Defining the I/O instructions as privileged prevents the user from performing these illegal I/O operations, and forces the user to execute system calls for the operating system to perform the I/O which is safer.
 
 - Timer management
-The timer is used to ensure a user program never takes control of the CPU and
-gets stuck in a failed system call or infinite loop, preventing the OS from
-regaining control. The timer management instructions are used to control the
-timer and make sure it interrupts user instructions after a count of clock
-cycles, to let the OS regain control of the CPU. Timer management instructions
-are privileged because giving the user direct control over the timer could cause
-a program to prevent the timer from interrupting it, preventing the OS from
-regaining control of the CPU through the timer.
+The timer is used to ensure a user program never takes control of the CPU and gets stuck in a failed system call or infinite loop, preventing the OS from regaining control. The timer management instructions are used to control the timer and make sure it interrupts user instructions after a count of clock cycles, to let the OS regain control of the CPU. Timer management instructions are privileged because giving the user direct control over the timer could cause
+a program to prevent the timer from interrupting it, preventing the OS from regaining control of the CPU through the timer and prevents the CPU from running other programs (multi-processing).
 
   
 g) [0.4 marks] A simple Batch OS includes the four components discussed in class: 

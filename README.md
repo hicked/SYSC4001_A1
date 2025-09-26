@@ -67,7 +67,6 @@ CR (Carriage Return):
 - Spin a motor to move the print head back to the left side of the page
 - Read new line (character array) from buffer
 
-
 d) [0.4 marks] Explain briefly how the off-line operation works in batch OS. Discuss advantages and 
 disadvantages of this approach. 
  

@@ -19,7 +19,8 @@ int main(int argc, char** argv) {
     std::string execution;  //!< string to accumulate the execution output
 
     /******************ADD YOUR VARIABLES HERE*************************/
-
+    std::vector<int> inputInts = 
+    for each line in trace file, add to the inputInts (for later calculations)
 
 
     /******************************************************************/

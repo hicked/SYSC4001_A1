@@ -25,8 +25,10 @@ int main(int argc, char** argv) {
     std::string execution;  //!< string to accumulate the execution output
 
     /******************ADD YOUR VARIABLES HERE*************************/
-    std::unordered_map<std::string, std::vector<>> actions;
-
+    
+    //activity, (vector table, device table)
+    std::unordered_map<std::string, std::vector<std::string>> actions;
+    
     /******************************************************************/
 
     //parse each line of the input trace file
@@ -34,7 +36,25 @@ int main(int argc, char** argv) {
         auto [activity, duration_intr] = parse_trace(trace);
 
         /******************ADD YOUR SIMULATION CODE HERE*************************/
+        if (activity == "CPU") {
+            //appened CPU, time, "CPU processing" to output
+            
+        }
+        else if (activity == "SYSCALL") {
+            //enter kernel mode (1ms)
+            //context saved (~10ms) macro this
+            //caluclate where in memory ISR start address is (1ms)
+            //obtain ISR address (1ms)
+            //execute ISR body (depends on activity) - depends on device - expand on this
+            //execute IRET, enter user mode
+        }
+        else if (activity == "END_IO") {
 
+        }
+        else {
+            //invalid input
+            //append invalid instruction and end program
+        }
 
 
         /************************************************************************/

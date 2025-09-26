@@ -5,6 +5,11 @@
  *
  */
 
+/*
+ * Includes added: 
+ */
+ #include <unordered_map>
+
 #include<interrupts.hpp>
 
 int main(int argc, char** argv) {
@@ -13,15 +18,14 @@ int main(int argc, char** argv) {
     //delays  is a C++ std::vector of ints that contain the delays of each device
     //the index of these elemens is the device number, starting from 0
     auto [vectors, delays] = parse_args(argc, argv);
+
     std::ifstream input_file(argv[1]);
 
     std::string trace;      //!< string to store single line of trace file
     std::string execution;  //!< string to accumulate the execution output
 
     /******************ADD YOUR VARIABLES HERE*************************/
-    std::vector<int> inputInts = 
-    for each line in trace file, add to the inputInts (for later calculations)
-
+    std::unordered_map<std::string, std::vector<>> actions;
 
     /******************************************************************/
 

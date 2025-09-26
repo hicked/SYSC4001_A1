@@ -11,20 +11,18 @@ is done by software. [Student 1]
 
 Below is a sequence of of hardware and software steps that are involved in the full interupt mechanism for I/O deviced servicing.
 - The interrupt is enabled by a set of sensor(s) and/or software within the I/O device (this could be for when it's finished printing, reading, or doing some other task depending on the I/O device).
-- This signal is then stored within the I/O devices internal IR (interrupt register).
+- This signal is then stored within the I/O device's internal IR (interrupt register) hardware.
 - It then travels through a physical connection (copper wire, cable, port, etc.)
-- To the IOP IR (Input/Output Processor Interrupt Register). This can be compared to a 1401 processor from the early staged of computers as it is a less powerful computer that is used as a middleman for communicating between I/O devices and the main CPU.
-- The interrupt signal is then sent through the internal Interrupt Databus, where it wakes up the CPU (if it was previously asleep), and stored the signal within the CPUs IR (Interrupt Register).
-- Because of the way the CPU's architecture is set up, this register (IR) is checked at the end of each fetch execute cycle. Therefore, after finishing it's execution, or waking up, it will recognize that an interrupt signal has been sent.
-- Then, the CPU will use the data that is within the IR to find which interrupt handler to use by looking through it's vector table, which then points to a set of drivers stored in the OS/Monitor. This will branch to that specific devices interrupt handler, before continuing with the instruction it was doing previously. 
-
--In reality it is a little more complicated than this: Firstly, software is used to determine if an interrupt has already occured, before sending one of it's own. If this is the case, it must wait until it is able to send the signal. Also, we will see that for later iterations, sometimes the CPU might wait until more than just the end of each cycle since this can give the interrupt handler (from within the vector table) permissions it is not supposed to have, including possibly modifying the kernel.
+- To the IOP IR (Input/Output Processor Interrupt Register) hardware. This can be compared to a 1401 processor from the early stages of computers as it is a less powerful computer that is used as a middleman for communicating between I/O devices and the main CPU.
+- The interrupt signal is then sent through the internal Interrupt Databus, where it wakes up the CPU (if it was previously asleep). The signal is then stored within the CPUs IR (Interrupt Register) hardware.
+- Because of the way the CPU's hardware architecture is set up, this register (IR) is checked at the end of each fetch execute cycle. Therefore, after finishing its execution, or waking up, it will recognize that an interrupt signal has been sent.
+- Then, the CPU will use the data that is within the IR to find which interrupt handler to use by looking through its vector table hardware, which then points to a set of drivers stored in the OS/Monitor. This will branch to that specific device's interrupt service routine (ISR) software, before continuing with the instruction it was doing previously. 
 
 b) [0.1 marks] Explain, in detail, what a System Call is, give at least three examples of known system calls. 
 Additionally, explain how system Calls are related to Interrupts and explain how the Interrupt hardware 
 mechanism is used to implement System Calls. [Student 2] 
 
-A sytstem call is a request sent by a user program to ask the OS to perform tasks which are normally reserved for the OS.
+A sytstem call is a request sent by a user program to ask the OS to perform tasks which are normally reserved for the OS. They are accessed via an Application Programming Interface (API).
 There are six main categories of system calls:
 - Process control
 - File management
@@ -39,10 +37,10 @@ Three examples of system calls are:
 3. Allocate memory (Process control)
 
 System calls are related to interupts because they can create a software interrupt, known as a "trap" or "exception". 
-The system call provides an interrupt vector, which passes control to a system-call service routine.
+The system call provides an interrupt vector, which the CPU then uses to find the system call service routine and execute it.
 The system call also sets the CPU state to kernel mode, by setting the mode bit accordingly.
 The kernel identifies which system call was invoked, then executes it, and finally gives control back to the program.
-This process of using a software interrupt, providing an interrupt vector, changing the mode bit, and executing a service routine uses the same hardware as interrupts to execute a system call.
+This process of using a software interrupt, providing an interrupt vector, checking the vector table, and executing a service routine uses the same hardware as interrupts to execute a system call. This is different from hardware interrupts, which are triggered by hardware such as input and output devices, instead of from user software.
 
  
 c) [0.1 marks] In class, we showed a simple pseudocode of an output driver for a printer. This driver 
@@ -59,12 +57,16 @@ i. To check if the printer is OK, the CPU should:
 - Check if the printer has paper
 - Check if the printer has ink
 
-ii. LF (Line Feed):
-- Spin a motor to move the print head down by one line OR
-    - Spin a motor to move the paper up by one line
+ii. 
+LF (Line Feed):
+- Spin a motor to move the print head down by one line (if page) OR
+- Spin a motor to move the paper up by one line (if roll)
+- Check if reached bottom of paper, feed new paper (if page), or alert operator to provide more paper if none left
 
 CR (Carriage Return):
 - Spin a motor to move the print head back to the left side of the page
+- Read new line (character array) from buffer
+
 
 d) [0.4 marks] Explain briefly how the off-line operation works in batch OS. Discuss advantages and 
 disadvantages of this approach. 

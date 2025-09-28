@@ -1,5 +1,5 @@
 if [[ $1 == *--mac* ]]; then
-    ./build_mac.sh
+    ./build.sh --mac
 else
     ./build.sh
 fi

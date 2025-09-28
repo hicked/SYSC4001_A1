@@ -10,6 +10,8 @@
 #include<sstream>
 #include<iomanip>
 
+#include<tuple>
+
 #include<stdio.h>
 
 #define ADDR_BASE   0
@@ -139,4 +141,5 @@ void write_output(std::string execution) {
 
     std::cout << "Output generated in execution.txt" << std::endl;
 }
+
 #endif

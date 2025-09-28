@@ -12,6 +12,8 @@
 
 #include<interrupts.hpp>
 
+#define CONTEXT_SAVETIME 10
+
 int main(int argc, char** argv) {
 
     //vectors is a C++ std::vector of strings that contain the address of the ISR
@@ -27,12 +29,12 @@ int main(int argc, char** argv) {
 
     /******************ADD YOUR VARIABLES HERE*************************/
     
-    std::vector<string>     vectorTableList;
+    std::vector<std::string>     vectorTableList;
     std::vector<int>        IODeviceDelay;
-    auto parsedData = parse_args(argc, argv);
+    std::tuple<std::vector<std::string>, std::vector<int>> parsedData = parse_args(argc, argv);
     
-    vectorTableList, IODeviceDelay = parsedData[0], parsedData[1];
-    
+    vectorTableList = std::get<0>(parsedData);
+    IODeviceDelay = std::get<1>(parsedData);
     
     /******************************************************************/
 
@@ -42,10 +44,20 @@ int main(int argc, char** argv) {
 
         /******************ADD YOUR SIMULATION CODE HERE*************************/
         if (activity == "CPU") {
-            execution += createOutputString(upTime, duration_intr, "CPU processing");
+            //execution += createOutputString(upTime, duration_intr, "CPU processing");
             upTime += duration_intr;
         }
         else if (activity == "SYSCALL") {
+            
+            std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, CONTEXT_SAVETIME, vectorTableList);
+            execution += output.first;
+            upTime = output.second;
+
+
+            //do ISR
+
+            
+            /*
             execution += createOutputString(upTime, 1, "switch to kernel mode");
             upTime += 1;
 
@@ -78,7 +90,7 @@ int main(int argc, char** argv) {
             upTime += 1;
 
             execution += ", context saved\n";
-            upTime += 2;
+            upTime += 2;*/
 
             //enter kernel mode (1ms)
             //context saved (~10ms) macro this
@@ -107,7 +119,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-
+/*
 std::string createOutputString(unsigned long totalTime, int delay, std::string msg) {
     std::string output = "";
     output += std::to_string(totalTime);
@@ -118,3 +130,4 @@ std::string createOutputString(unsigned long totalTime, int delay, std::string m
     output += "\n";
     return output;
 }
+*/

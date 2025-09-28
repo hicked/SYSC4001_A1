@@ -74,7 +74,6 @@ int main(int argc, char** argv) {
         }
         else {
             execution += createOutputString(upTime, 0, "INVALID ACTIVITY");
-            return 1;
         }
 
         /************************************************************************/

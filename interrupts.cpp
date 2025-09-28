@@ -23,11 +23,16 @@ int main(int argc, char** argv) {
 
     std::string trace;      //!< string to store single line of trace file
     std::string execution;  //!< string to accumulate the execution output
+    unsigned long upTime = 0;
 
     /******************ADD YOUR VARIABLES HERE*************************/
     
-    //activity, (vector table, device table)
-    std::unordered_map<std::string, std::vector<std::string>> actions;
+    std::vector<string>     vectorTableList;
+    std::vector<int>        IODeviceDelay;
+    auto parsedData = parse_args(argc, argv);
+    
+    vectorTableList, IODeviceDelay = parsedData[0], parsedData[1];
+    
     
     /******************************************************************/
 
@@ -37,10 +42,44 @@ int main(int argc, char** argv) {
 
         /******************ADD YOUR SIMULATION CODE HERE*************************/
         if (activity == "CPU") {
-            //appened CPU, time, "CPU processing" to output
-            
+            execution += createOutputString(upTime, duration_intr, "CPU processing");
+            upTime += duration_intr;
         }
         else if (activity == "SYSCALL") {
+            execution += createOutputString(upTime, 1, "switch to kernel mode");
+            upTime += 1;
+
+            execution += createOutputString(upTime, 2, "context saved");
+            upTime += 2;
+
+            std::string inputStr = "";
+            inputStr += "find vector ";
+            inputStr += std::to_string(duration_intr);
+            inputStr += " in memory position"
+            execution += createOutputString(upTime, 1, "switch to kernel mode");
+            upTime += 1;
+
+            std::string ISRAddr = vectorTableList[duration_intr];
+            execution += createOutputString(upTime, 1, "obtain ISR address: ");
+            upTime += 1;
+
+
+
+
+
+
+
+            
+            execution += ",  find vector "
+            execution += std::to_string(duration_intr);
+            execution += " in memory position ";
+            execution += std::to_string(duration_intr*2);           // DOUBLE CHECK THIS !!!!!!!!!!!!!!!!!!
+            execution += "\n";
+            upTime += 1;
+
+            execution += ", context saved\n";
+            upTime += 2;
+
             //enter kernel mode (1ms)
             //context saved (~10ms) macro this
             //caluclate where in memory ISR start address is (1ms)
@@ -48,13 +87,13 @@ int main(int argc, char** argv) {
             //execute ISR body (depends on activity) - depends on device - expand on this
             //execute IRET, enter user mode
         }
-        else if (activity == "END_IO") {
+        // else if (activity == "END_IO") {
 
-        }
-        else {
-            //invalid input
-            //append invalid instruction and end program
-        }
+        // }
+        // else {
+        //     //invalid input
+        //     //append invalid instruction and end program
+        // }
 
 
         /************************************************************************/
@@ -66,4 +105,16 @@ int main(int argc, char** argv) {
     write_output(execution);
 
     return 0;
+}
+
+
+std::string createOutputString(unsigned long totalTime, int delay, std::string msg) {
+    std::string output = "";
+    output += std::to_string(totalTime);
+    output += ", ";
+    output += std::to_string(delay);
+    output += ", ";
+    output += msg;
+    output += "\n";
+    return output;
 }

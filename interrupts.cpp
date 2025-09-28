@@ -41,24 +41,31 @@ int main(int argc, char** argv) {
             upTime += duration_intr;
         }
         else if (activity == "SYSCALL") {
-            std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, contextSaveTime, vectors);
-            execution += output.first;
-            upTime = output.second;
 
-            // If there is no delay in device table, we assume that the ISR isn't for an I/O device, and is a regular system call
-            try {
-                int ISRDelay = delays.at(duration_intr); // Use .at() for bounds checking
-                execution += createOutputString(upTime, ISRDelay, "running I/O device specific ISR from hardware interrupt");
-                upTime += ISRDelay;
-            }
-            catch (const std::out_of_range&) { // Catch out_of_range exception
-                execution += createOutputString(upTime, sysCallHandleTime, "running system call from software interrupt");
+            if (duration_intr >= vectors.size()) {
+                execution += createOutputString(upTime, 1, "INVALID INDEX");
                 upTime += 1;
             }
+            else {
+                std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, contextSaveTime, vectors);
+                execution += output.first;
+                upTime = output.second;
 
-            // IRET
-            execution += createOutputString(upTime, 1, "Running IRET");
-            upTime += 1;
+                // If there is no delay in device table, we assume that the ISR isn't for an I/O device, and is a regular system call
+                try {
+                    int ISRDelay = delays.at(duration_intr); // Use .at() for bounds checking
+                    execution += createOutputString(upTime, ISRDelay, "running I/O device specific ISR from hardware interrupt");
+                    upTime += ISRDelay;
+                }
+                catch (const std::out_of_range&) { // Catch out_of_range exception
+                    execution += createOutputString(upTime, sysCallHandleTime, "running system call from software interrupt");
+                    upTime += 1;
+                }
+
+                // IRET
+                execution += createOutputString(upTime, 1, "Running IRET");
+                upTime += 1;
+            }
 
         }
         else if (activity == "END_IO") {
@@ -66,7 +73,8 @@ int main(int argc, char** argv) {
             upTime += 1;
         }
         else {
-            execution += createOutputString(upTime, 1, "INVALID");
+            execution += createOutputString(upTime, 0, "INVALID ACTIVITY");
+            return 1;
         }
 
         /************************************************************************/

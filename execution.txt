@@ -1,0 +1,29 @@
+0, 50, CPU processing
+50, 1, switch to kernel mode
+51, 10, context saved
+61, 1, find vector 7 in memory position 0x000E
+62, 1, load address 0X00BD into the PC
+63, 152, running I/O device specific ISR from hardware interrupt
+215, 1, Running IRET
+216, 1, Ending I/O for device 7
+217, 100, CPU processing
+317, 1, switch to kernel mode
+318, 10, context saved
+328, 1, find vector 12 in memory position 0x0018
+329, 1, load address 0X03B9 into the PC
+330, 145, running I/O device specific ISR from hardware interrupt
+475, 1, Running IRET
+476, 1, Ending I/O for device 12
+477, 20, CPU processing
+497, 1, switch to kernel mode
+498, 10, context saved
+508, 1, find vector 25 in memory position 0x0032
+509, 1, load address 0X05D3 into the PC
+510, 1, running system call from software interrupt
+511, 1, Running IRET
+512, 1, switch to kernel mode
+513, 10, context saved
+523, 1, find vector 20 in memory position 0x0028
+524, 1, load address 0X07B7 into the PC
+525, 1, running system call from software interrupt
+526, 1, Running IRET

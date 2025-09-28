@@ -1,18 +1,11 @@
 /**
  *
  * @file interrupts.cpp
- * @author Sasisekhar Govind
+ * @author Antoine Hickey
  *
  */
 
-/*
- * Includes added: 
- */
- #include <unordered_map>
-
 #include<interrupts.hpp>
-
-#define CONTEXT_SAVETIME 10
 
 int main(int argc, char** argv) {
 
@@ -25,16 +18,12 @@ int main(int argc, char** argv) {
 
     std::string trace;      //!< string to store single line of trace file
     std::string execution;  //!< string to accumulate the execution output
-    unsigned long upTime = 0;
 
     /******************ADD YOUR VARIABLES HERE*************************/
     
-    std::vector<std::string>     vectorTableList;
-    std::vector<int>        IODeviceDelay;
-    std::tuple<std::vector<std::string>, std::vector<int>> parsedData = parse_args(argc, argv);
-    
-    vectorTableList = std::get<0>(parsedData);
-    IODeviceDelay = std::get<1>(parsedData);
+    unsigned long   upTime =            0;
+    const int       contextSaveTime =   10;
+    const int       sysCallHandleTime = 1;
     
     /******************************************************************/
 
@@ -44,69 +33,41 @@ int main(int argc, char** argv) {
 
         /******************ADD YOUR SIMULATION CODE HERE*************************/
         if (activity == "CPU") {
-            //execution += createOutputString(upTime, duration_intr, "CPU processing");
+            execution += std::to_string(upTime) 
+                        + ", " 
+                        + std::to_string(duration_intr)
+                        + ", CPU processing\n";
+
             upTime += duration_intr;
         }
         else if (activity == "SYSCALL") {
-            
-            std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, CONTEXT_SAVETIME, vectorTableList);
+            std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, contextSaveTime, vectors);
             execution += output.first;
             upTime = output.second;
 
+            // If there is no delay in device table, we assume that the ISR isn't for an I/O device, and is a regular system call
+            try {
+                int ISRDelay = delays.at(duration_intr); // Use .at() for bounds checking
+                execution += createOutputString(upTime, ISRDelay, "running I/O device specific ISR from hardware interrupt");
+                upTime += ISRDelay;
+            }
+            catch (const std::out_of_range&) { // Catch out_of_range exception
+                execution += createOutputString(upTime, sysCallHandleTime, "running system call from software interrupt");
+                upTime += 1;
+            }
 
-            //do ISR
-
-            
-            /*
-            execution += createOutputString(upTime, 1, "switch to kernel mode");
+            // IRET
+            execution += createOutputString(upTime, 1, "Running IRET");
             upTime += 1;
 
-            execution += createOutputString(upTime, 2, "context saved");
-            upTime += 2;
-
-            std::string inputStr = "";
-            inputStr += "find vector ";
-            inputStr += std::to_string(duration_intr);
-            inputStr += " in memory position"
-            execution += createOutputString(upTime, 1, "switch to kernel mode");
-            upTime += 1;
-
-            std::string ISRAddr = vectorTableList[duration_intr];
-            execution += createOutputString(upTime, 1, "obtain ISR address: ");
-            upTime += 1;
-
-
-
-
-
-
-
-            
-            execution += ",  find vector "
-            execution += std::to_string(duration_intr);
-            execution += " in memory position ";
-            execution += std::to_string(duration_intr*2);           // DOUBLE CHECK THIS !!!!!!!!!!!!!!!!!!
-            execution += "\n";
-            upTime += 1;
-
-            execution += ", context saved\n";
-            upTime += 2;*/
-
-            //enter kernel mode (1ms)
-            //context saved (~10ms) macro this
-            //caluclate where in memory ISR start address is (1ms)
-            //obtain ISR address (1ms)
-            //execute ISR body (depends on activity) - depends on device - expand on this
-            //execute IRET, enter user mode
         }
-        // else if (activity == "END_IO") {
-
-        // }
-        // else {
-        //     //invalid input
-        //     //append invalid instruction and end program
-        // }
-
+        else if (activity == "END_IO") {
+            execution += createOutputString(upTime, 1, "Ending I/O for device " + std::to_string(duration_intr));
+            upTime += 1;
+        }
+        else {
+            execution += createOutputString(upTime, 1, "INVALID");
+        }
 
         /************************************************************************/
 
@@ -119,7 +80,6 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-/*
 std::string createOutputString(unsigned long totalTime, int delay, std::string msg) {
     std::string output = "";
     output += std::to_string(totalTime);
@@ -130,4 +90,4 @@ std::string createOutputString(unsigned long totalTime, int delay, std::string m
     output += "\n";
     return output;
 }
-*/
+

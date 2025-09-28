@@ -142,4 +142,6 @@ void write_output(std::string execution) {
     std::cout << "Output generated in execution.txt" << std::endl;
 }
 
+std::string createOutputString(unsigned long totalTime, int delay, std::string msg);
+
 #endif

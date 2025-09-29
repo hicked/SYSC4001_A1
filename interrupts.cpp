@@ -49,9 +49,9 @@ int main(int argc, char** argv) {
             upTime += duration_intr;
         }
         else if (activity == "SYSCALL") {
-
+            
             if (duration_intr >= vectors.size()) {
-                execution += createOutputString(upTime, 1, "INVALID INDEX");
+                execution += createOutputString(upTime, 1, "ERROR: INVALID VECTOR TABLE INDEX. The I/O device specific drivers may be corrupted.");
                 upTime += 1;
             }
             else {
@@ -88,7 +88,8 @@ int main(int argc, char** argv) {
             upTime += 1;
         }
         else {
-            execution += createOutputString(upTime, 0, "INVALID ACTIVITY");
+            execution += createOutputString(upTime, 0, "ERROR: INVALID ACTIVITY. ENDING SIMULATION");
+            return 1;
         }
 
         /************************************************************************/

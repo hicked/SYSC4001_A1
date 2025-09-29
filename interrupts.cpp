@@ -27,6 +27,12 @@ int main(int argc, char** argv) {
     
     /******************************************************************/
 
+    //STATE ASSUMPTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //total ISR + device time ex. 40 + 200
+    //CPU polls in meantime - no interrupt manager
+    //DON'T say CPU polling for x time - unrealisitc
+
+
     //parse each line of the input trace file
     while(std::getline(input_file, trace)) {
         auto [activity, duration_intr] = parse_trace(trace);
@@ -67,6 +73,12 @@ int main(int argc, char** argv) {
                 upTime += 1;
             }
 
+            //low level parallelism?????????????????????
+            //ISR is seperate from actual hardware wait time (in device table)
+            //store last uptime when system calls for device
+            //at x milliseconds, stop and check device, then resume?????
+            //
+
         }
         else if (activity == "END_IO") {
             execution += createOutputString(upTime, 1, "Ending I/O for device " + std::to_string(duration_intr));
@@ -79,7 +91,6 @@ int main(int argc, char** argv) {
         /************************************************************************/
 
     }
-
     input_file.close();
 
     write_output(execution);

@@ -21,9 +21,11 @@ int main(int argc, char** argv) {
 
     /******************ADD YOUR VARIABLES HERE*************************/
     
-    unsigned long   upTime =            0;
-    const int       contextSaveTime =   10;
-    const int       sysCallHandleTime = 1;
+    unsigned long   upTime =                0;
+    const int       contextSaveTime =       10;
+    const int       contextRestoreTime =    10;
+    const int       ISRActivityTime =       40;
+
     
     /******************************************************************/
 
@@ -58,13 +60,20 @@ int main(int argc, char** argv) {
                 upTime = output.second;
 
                 // If there is no delay in device table, we assume that the ISR isn't for an I/O device, and is a regular system call
-                try {
-                    int ISRDelay = delays.at(duration_intr); // Use .at() for bounds checking
-                    execution += createOutputString(upTime, ISRDelay, "running I/O device specific ISR from hardware interrupt");
-                    upTime += ISRDelay;
+                // We are assuming there is no low level paralism yet, and therefore the CPU will hang until the I/O devce is finished
+                // This is why, for now, we print "polling..." until the device is done before continuing
+                // In the future (assignment 2), we will use an interupt schedule to allow for low level parallelism
+                if (duration_intr < delays.size()) {
+                    execution += createOutputString(upTime, ISRActivityTime, "running I/O device specific ISR from hardware interrupt");
+                    upTime += ISRActivityTime;
+
+                    int IODelay = delays[duration_intr];
+                    int numDots = (IODelay/50 < 3) ? 3 : IODelay/50;
+                    execution += createOutputString(upTime, IODelay, "IO device busy: CPU polling" + std::string(numDots, '.') + "I/O device finished, resuming");
+                    upTime += IODelay;
                 }
-                catch (const std::out_of_range&) { // Catch out_of_range exception
-                    execution += createOutputString(upTime, sysCallHandleTime, "running system call from software interrupt");
+                else {
+                    execution += createOutputString(upTime, ISRActivityTime, "Running system call from software interrupt (Not an I/O device)");
                     upTime += 1;
                 }
 
@@ -72,12 +81,6 @@ int main(int argc, char** argv) {
                 execution += createOutputString(upTime, 1, "Running IRET");
                 upTime += 1;
             }
-
-            //low level parallelism?????????????????????
-            //ISR is seperate from actual hardware wait time (in device table)
-            //store last uptime when system calls for device
-            //at x milliseconds, stop and check device, then resume?????
-            //
 
         }
         else if (activity == "END_IO") {
@@ -109,3 +112,7 @@ std::string createOutputString(unsigned long totalTime, int delay, std::string m
     return output;
 }
 
+// Things to thing about for Assignment 2 (interupt scheduler)
+//ISR is seperate from actual hardware wait time (in device table)
+//store last uptime when system calls for device
+//at x milliseconds, stop and check device, then resume?????

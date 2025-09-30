@@ -22,8 +22,7 @@ int main(int argc, char** argv) {
     /******************ADD YOUR VARIABLES HERE*************************/
     
     unsigned long   upTime =                0;
-    const int       contextSaveTime =       10;
-    const int       contextRestoreTime =    10;
+    const int       contextSavResTime =       10;
     const int       ISRActivityTime =       40;
 
     /******************************************************************/
@@ -48,7 +47,7 @@ int main(int argc, char** argv) {
                 upTime += 1;
             }
             else {
-                std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, contextSaveTime, vectors);
+                std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, contextSavResTime, vectors);
                 execution += output.first;
                 upTime = output.second;
 
@@ -74,8 +73,8 @@ int main(int argc, char** argv) {
                 }
 
                 // Restoring context
-                execution += createOutputString(upTime, contextRestoreTime, "restoring previously saved context");
-                upTime += contextRestoreTime;
+                execution += createOutputString(upTime, contextSavResTime, "restoring previously saved context");
+                upTime += contextSavResTime;
 
                 // IRET (restoring)
                 execution += createOutputString(upTime, 1, "running IRET");

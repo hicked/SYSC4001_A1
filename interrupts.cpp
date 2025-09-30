@@ -22,7 +22,8 @@ int main(int argc, char** argv) {
     /******************ADD YOUR VARIABLES HERE*************************/
     
     unsigned long   upTime =                0;
-    const int       contextSavResTime =       10;
+
+    const int       contextSavResTime =     10; // vary 10, 20, 30
     const int       ISRActivityTime =       40;
 
     /******************************************************************/
@@ -71,7 +72,7 @@ int main(int argc, char** argv) {
                     execution += createOutputString(upTime, ISRActivityTime, "running ISR from system call software interrupt");
                     upTime += 1;
                 }
-                
+
                 // IRET (restoring)
                 execution += createOutputString(upTime, contextSavResTime, "running IRET (restoring context)");
                 upTime += 1;

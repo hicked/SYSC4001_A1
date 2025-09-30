@@ -71,13 +71,9 @@ int main(int argc, char** argv) {
                     execution += createOutputString(upTime, ISRActivityTime, "running ISR from system call software interrupt");
                     upTime += 1;
                 }
-
-                // Restoring context
-                execution += createOutputString(upTime, contextSavResTime, "restoring previously saved context");
-                upTime += contextSavResTime;
-
+                
                 // IRET (restoring)
-                execution += createOutputString(upTime, 1, "running IRET");
+                execution += createOutputString(upTime, contextSavResTime, "running IRET (restoring context)");
                 upTime += 1;
             }
 

@@ -7,6 +7,8 @@ Below is a brief explanation of our implementation and assumptions, as well as t
 ## Program Description
 This programs servers to simulate the activities of a CPU. This has an emphasis on demonstrating an interrupt driven system that processes CPU activities and system calls (both software, and hardware i.e. from I/O devices). The simulation tracks timing using an `upTime` counter and generates detailed execution traces in `execution.txt`. The `trace.txt` is therefore the input file. The original Bash file was modified, and one was added: `buildnrun.sh`.
 
+We also assumed that since there were more ISR registers in the vector table than delays in the device table, all ISRs past index 19, are exclusively software system calls (no I/O devices involved).
+
 ### Implementation Details and Assumptions
 
 **Core Variables**: 

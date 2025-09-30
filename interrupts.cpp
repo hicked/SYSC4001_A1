@@ -114,7 +114,7 @@ std::string createOutputString(unsigned long totalTime, int delay, std::string m
     return output;
 }
 
-// Things to thing about for Assignment 2 (interupt scheduler)
+// Things to think about for Assignment 2 (interupt scheduler)
 // ISR is seperate from actual hardware wait time (in device table)
 // store last uptime when system calls for device
 // at x milliseconds, stop and check device, then resume? Probably 1ms

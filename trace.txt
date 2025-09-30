@@ -10,4 +10,3 @@ SYSCALL, 40
 CPU, 100
 SYSCALL, 16
 END_IO, 16
-sadjklasdjskaljkl, 1

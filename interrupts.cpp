@@ -26,16 +26,9 @@ int main(int argc, char** argv) {
     const int       contextRestoreTime =    10;
     const int       ISRActivityTime =       40;
 
-    
     /******************************************************************/
 
-    //STATE ASSUMPTIONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //total ISR + device time ex. 40 + 200
-    //CPU polls in meantime - no interrupt manager
-    //DON'T say CPU polling for x time - unrealisitc
-
-
-    //parse each line of the input trace file
+    // Parse each line of the input trace file
     while(std::getline(input_file, trace)) {
         auto [activity, duration_intr] = parse_trace(trace);
 
@@ -51,7 +44,7 @@ int main(int argc, char** argv) {
         else if (activity == "SYSCALL") {
             
             if (duration_intr >= vectors.size()) {
-                execution += createOutputString(upTime, 1, "ERROR: INVALID VECTOR TABLE INDEX. The I/O device specific drivers may be corrupted.");
+                execution += createOutputString(upTime, 1, "ERROR: INVALID VECTOR TABLE INDEX: The I/O device specific drivers may be corrupted.");
                 upTime += 1;
             }
             else {
@@ -63,37 +56,46 @@ int main(int argc, char** argv) {
                 // We are assuming there is no low level paralism yet, and therefore the CPU will hang until the I/O devce is finished
                 // This is why, for now, we print "polling..." until the device is done before continuing
                 // In the future (assignment 2), we will use an interupt schedule to allow for low level parallelism
+                // Note: We decided to additionally differentiate between the software and hardware (I/O) ISRs in the output (execution.txt)
                 if (duration_intr < delays.size()) {
-                    execution += createOutputString(upTime, ISRActivityTime, "running I/O device specific ISR from hardware interrupt");
+                    execution += createOutputString(upTime, ISRActivityTime, "running I/O device specific ISR (driver) due to hardware interrupt");
                     upTime += ISRActivityTime;
 
                     int IODelay = delays[duration_intr];
+
+                    // Printing "." to simulate the CPU polling, or waiting for the I/O device to finish
                     int numDots = (IODelay/50 < 3) ? 3 : IODelay/50;
                     execution += createOutputString(upTime, IODelay, "IO device busy: CPU polling" + std::string(numDots, '.') + "I/O device finished, resuming");
                     upTime += IODelay;
                 }
                 else {
-                    execution += createOutputString(upTime, ISRActivityTime, "Running system call from software interrupt (Not an I/O device)");
+                    execution += createOutputString(upTime, ISRActivityTime, "running ISR from system call software interrupt");
                     upTime += 1;
                 }
 
-                // IRET
-                execution += createOutputString(upTime, 1, "Running IRET");
+                // Restoring context
+                execution += createOutputString(upTime, contextRestoreTime, "restoring previously saved context");
+                upTime += contextRestoreTime;
+
+                // IRET (restoring)
+                execution += createOutputString(upTime, 1, "running IRET");
                 upTime += 1;
             }
 
         }
         else if (activity == "END_IO") {
-            execution += createOutputString(upTime, 1, "Ending I/O for device " + std::to_string(duration_intr));
+            execution += createOutputString(upTime, 1, "ending I/O for device " + std::to_string(duration_intr));
             upTime += 1;
         }
         else {
+            // return 1 since it fails (most likely an incorrect trace file)
             execution += createOutputString(upTime, 0, "ERROR: INVALID ACTIVITY. ENDING SIMULATION");
+            input_file.close();
+            write_output(execution);
             return 1;
         }
 
         /************************************************************************/
-
     }
     input_file.close();
 
@@ -114,6 +116,6 @@ std::string createOutputString(unsigned long totalTime, int delay, std::string m
 }
 
 // Things to thing about for Assignment 2 (interupt scheduler)
-//ISR is seperate from actual hardware wait time (in device table)
-//store last uptime when system calls for device
-//at x milliseconds, stop and check device, then resume?????
+// ISR is seperate from actual hardware wait time (in device table)
+// store last uptime when system calls for device
+// at x milliseconds, stop and check device, then resume? Probably 1ms

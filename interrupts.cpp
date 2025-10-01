@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     unsigned long   upTime =                0;
 
     const int       contextSavResTime =     10; // vary 10, 20, 30
-    const int       ISRActivityTime =       40;
+    const int       ISRActivityTime =       40; // vary 40, 100, 200
 
     /******************************************************************/
 

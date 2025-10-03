@@ -90,7 +90,17 @@ CR (Carriage Return):
 
 d) [0.4 marks] Explain briefly how the off-line operation works in batch OS. Discuss advantages and 
 disadvantages of this approach. 
- 
+In batch OSes, off-line operation works by offloading the human readable input and output devices to separate processors. This makes these devices off-line, since they were not managed by the main CPU. Typically, off-line operation was implemented in the following way:
+1. A weak processor, such as an IBM 1401, uses a card reader to read punch cards and load programs onto a magnetic tape.
+2. An operator moves the tape from the 1401 to the strong CPU, such as an IBM 7094.
+3. The 7094 CPU runs the program and outputs the data on another tape.
+4. The operator moves the tape from the 7094 to another weak processor, such as a 1401.
+5. This 1401 processor reads the tape and outputs the data to a printer for humans to read.
+
+Off-line operation has some advantages and disadvantages compared to the CPU operating the card reader and printer directly.
+An advantage of off-line operation is that the CPU no longer has to wait for the card reader and printer, and can instead use tape drives, which are much faster. This frees up the CPU to finish a batch faster and spend more time processing, rather than waiting for I/O. This advantage can be leveraged even further by using several input and output tape processor units, so that input tapes are always ready for the CPU to process, and output tapes are printed onto paper as soon as possible. Using extra processors, readers, and printers allows the CPU to process even more, and minimizes idle and I/O processing time.
+
+Disadvantage
  
 e) [0.4 mark] Batch Operating Systems used special cards to automate processing and to identify the jobs to 
 be done. A new job started by using a special card that contained a command,  starting with $, like:

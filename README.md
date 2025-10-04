@@ -98,9 +98,8 @@ In batch OSes, off-line operation works by offloading the human readable input a
 5. This 1401 processor reads the tape and outputs the data to a printer for humans to read.
 
 Off-line operation has some advantages and disadvantages compared to the CPU operating the card reader and printer directly.
-An advantage of off-line operation is that the CPU no longer has to wait for the card reader and printer, and can instead use tape drives, which are much faster. This frees up the CPU to finish a batch faster and spend more time processing, rather than waiting for I/O. This advantage can be leveraged even further by using several input and output tape processor units, so that input tapes are always ready for the CPU to process, and output tapes are printed onto paper as soon as possible. Using extra processors, readers, and printers allows the CPU to process even more, and minimizes idle and I/O processing time.
+An advantage of off-line operation is that the CPU no longer has to wait for the card reader and printer, and can instead use tape drives, which are much faster. This frees up the CPU to finish a batch faster and spend more time processing, rather than waiting for I/O. This advantage can be leveraged even further by using several input and output tape processor units, so that input tapes are always ready for the CPU to process, and output tapes are printed onto paper as soon as possible. Using extra processors, readers, and printers allows the CPU to process even more, and minimizes idle and I/O processing time. The disadvantage of off-line operation lies in the use of magnetic tapes to store data. Since tapes can only be written to and read from sequentially, programs could not be added to the tape while the CPU was processing. Because of this, operators did not run individual programs, so programmers had to wait for an enitre batch of programs to be processed before being able to view the result of their code.
 
-Disadvantage
  
 e) [0.4 mark] Batch Operating Systems used special cards to automate processing and to identify the jobs to 
 be done. A new job started by using a special card that contained a command,  starting with $, like:
@@ -112,10 +111,22 @@ execution.
 i. [0.2 marks] Explain what would happen if a programmer wrote a driver and forgot to parse 
 the “$” in the cards read. How do we prevent that error? 
  
+If a programmer wrote a driver and forgot to parse the "$" symbols, the driver might misinterpret data that is identical to keywords such as "RUN" and "END" that were supposed to be plain text or part of a program.  The driver would then execute the commands, causing unexpected and incorrect behavior.
+
+We prevent this error by preventing user programs from directly interfacing with devices, instead requiring them to use system calls to request the OS to interface with devices instead. 
+
+~~To interface with these devices, the OS must run device drivers in kernel mode~~
+
+~~We prevent this error by preventing users from editing device drivers, such as this one, which reads from a card reader. This is done by keeping the device driver in the monitor part of memory and requiring the CPU to run the driver in kernel mode.~~
+
+
 ii. [0.2 marks] Explain what would happen if, in the middle of the execution of the program (i.e., 
 after executing the program using $RUN), we have a card that has the text “$END” at the 
 beginning of the card. What should the Operating System do in that case? 
  
+ If a card had "$END" in the middle of the program, the OS should stop the execution of the program immediately, and regain control over the CPU. The CPU would then fetch the next instruction from the OS, as it begins to process the next job.
+
+
  
 f) [0.2 marks] Write examples of four privileged instructions and explain what they do and why they are 
 privileged (each student should submit an answer for two instructions, separately, by the first 
@@ -178,3 +189,5 @@ For each of the following cases: create a Gantt diagram which includes all actio
 as the times when the CPU is busy/not busy, calculate the time for one cycle and the time for entire 
 program execution, and finally briefly discuss the results obtained. 
 
+
+The slowest of the four cases for both one cycle and the entire execution was by far Timed I/O. This is because of the extra margin of error added to the I/O times and because none of the processes could be run in parallel. Interrupts was the next slowest in both categories. It removed the margin of error required for Timed I/O, but added interrupt latencies. Polling was slightly faster than Interrupts, since it no longer had interrupt latency. The major downside to polling, however, is that the CPU is always active while waiting for the I/O, causing transistor degradation and wasting energy. Interrupts with buffering was the fastest in both categories. It was slightly faster for one cycle, since calculating GPAs and printing names could be done simultaneously. It, however, was far faster to complete the entire execution, as parallelization removed almost all of the idle time from the printer, meaning the total execution time was limited almost exclusively by the printer. 

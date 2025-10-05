@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     unsigned long   upTime =                0;
 
     const int       contextSavResTime =     10; // vary 10, 20, 30
-    const int       ISRActivityTime =       200; // vary 40, 100, 200
+    const int       ISRActivityTime =       40; // vary 40, 100, 200
 
     /******************************************************************/
 
@@ -44,8 +44,7 @@ int main(int argc, char** argv) {
         else if (activity == "SYSCALL") {
             
             if (duration_intr >= vectors.size()) {
-                execution += createOutputString(upTime, 1, "ERROR: INVALID VECTOR TABLE INDEX: The I/O device specific drivers may be corrupted.");
-                upTime += 1;
+                execution += createOutputString(upTime, 0, "ERROR: INVALID VECTOR TABLE INDEX: The I/O device specific drivers may be corrupted.");
             }
             else {
                 std::pair<std::string, int> output = intr_boilerplate(upTime, duration_intr, contextSavResTime, vectors);

@@ -1,7 +1,7 @@
 /**
  *
  * @file interrupts.cpp
- * @author Antoine Hickey
+ * @author Antoine Hickey 101295764, Enzo Chen
  *
  */
 
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
     unsigned long   upTime =                0;
 
     const int       contextSavResTime =     10; // vary 10, 20, 30
-    const int       ISRActivityTime =       40; // vary 40, 100, 200
+    const int       ISRActivityTime =       200; // vary 40, 100, 200
 
     /******************************************************************/
 
@@ -70,12 +70,12 @@ int main(int argc, char** argv) {
                 }
                 else {
                     execution += createOutputString(upTime, ISRActivityTime, "running ISR from system call software interrupt");
-                    upTime += 1;
+                    upTime += ISRActivityTime;
                 }
 
                 // IRET (restoring)
                 execution += createOutputString(upTime, contextSavResTime, "running IRET (restoring context)");
-                upTime += 1;
+                upTime += ISRActivityTime;
             }
 
         }

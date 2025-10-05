@@ -1,7 +1,7 @@
 /**
  *
  * @file interrupts.cpp
- * @author Antoine Hickey 101295764, Enzo Chen
+ * @author Antoine Hickey 101295764, Enzo Chen 101306299
  *
  */
 
